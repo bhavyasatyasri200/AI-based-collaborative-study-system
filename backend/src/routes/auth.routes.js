@@ -10,11 +10,11 @@ const {
 const isAuthenticated = require("../middlewares/auth.middleware")
 router.get("/google", googleAuthRedirect);
 router.get('/google/callback', googleCallback);
-
+const dataValidation = require("../utils/explicitDataCheck");
 router.get('/me',isAuthenticated, (req, res) => {
   res.json({ userId: req.session.userId, email: req.session.email, name: req.session.username });
 });
-router.post('/register', userRegister);
+router.post('/register',dataValidation,userRegister);
 router.post('/login', userLogin);
 router.post('/logout',isAuthenticated, userLogout);
 module.exports = router;
