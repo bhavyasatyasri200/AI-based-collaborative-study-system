@@ -15,10 +15,12 @@ async function checkExplicitContent(req, res, next) {
       });
   
       if (!response.ok) {
-        console.log(response);
-        return res.status(500).json({
-          message: "Failed to validate user data.",
-        });
+        const error = await response.json();
+      
+        console.error("Status:", response.status);
+        console.error("Error:", error);
+      
+        return res.status(response.status).json(error);
       }
   
       const data = await response.json();
