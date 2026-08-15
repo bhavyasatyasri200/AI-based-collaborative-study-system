@@ -172,7 +172,7 @@ ${note.content}
                             Authorization: `Bearer ${process.env.GROQ_API_KEY1}`
                         },
                         body: JSON.stringify({
-                            model: "llama-3.3-70b-versatile",
+                            model: "openai/gpt-oss-120b",
                             temperature: 0.3,
                             response_format: {
                                 type: "json_object"
@@ -434,7 +434,7 @@ ${note.content}
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    model: "llama-3.3-70b-versatile",
+                    model: "openai/gpt-oss-120b",
                     response_format: {
                         type: "json_object"
                     },
@@ -539,7 +539,7 @@ ${question}
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    model: "llama-3.3-70b-versatile",
+                    model: "openai/gpt-oss-120b",
                     response_format: {
                         type: "json_object"
                     },
@@ -636,7 +636,7 @@ ${note.content}
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    model: "llama-3.3-70b-versatile",
+                    model: "openai/gpt-oss-120b",
                     response_format: {
                         type: "json_object"
                     },
@@ -737,7 +737,7 @@ ${note.content}
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    model: "llama-3.3-70b-versatile",
+                    model: "openai/gpt-oss-120b",
                     response_format: {
                         type: "json_object"
                     },
