@@ -61,7 +61,7 @@ export default function LoginPage() {
         </div>
 
         <h1 className="auth-title">Welcome Back</h1>
-        <p className="auth-subtitle">Sign in to your account to continue learning</p>
+        <p className="auth-subtitle">No sign-up required. Continue with Google and start learning faster.</p>
 
         {/* Google OAuth */}
         <a href={`${BASE_URL}/auth/google`} className="auth-google-btn" id="google-login-btn">
