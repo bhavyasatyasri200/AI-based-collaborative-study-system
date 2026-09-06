@@ -74,7 +74,7 @@ export default function LoginPage() {
           Continue with Google
         </a>
 
-        <div className="auth-divider">or sign in with email</div>
+        {/* <div className="auth-divider">or sign in with email</div> */}
 
         {apiError && (
           <div className="auth-error">
@@ -85,7 +85,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        <form className="auth-form" onSubmit={handleSubmit} noValidate>
+        {/* <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label className="form-label" htmlFor="login-username">Username or Email</label>
             <input
@@ -125,11 +125,11 @@ export default function LoginPage() {
           >
             {loading ? <><div className="spinner spinner-sm" /> Signing in...</> : 'Sign In'}
           </button>
-        </form>
+        </form> */}
 
-        <p className="auth-footer">
+        {/* <p className="auth-footer">
           Don't have an account? <Link to="/register">Create one</Link>
-        </p>
+        </p> */}
       </div>
     </div>
   );
