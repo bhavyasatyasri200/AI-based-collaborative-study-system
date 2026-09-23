@@ -1,7 +1,9 @@
 // src/api/client.js
 // Base fetch wrapper — reads base URL from .env
 
-const BASE_URL = window.location.origin;;
+// MUST point to the backend URL, not the frontend origin.
+// Set VITE_API_URL in your Render frontend environment variables.
+const BASE_URL = import.meta.env.VITE_API_URL || window.location.origin;
 
 /**
  * Core fetch wrapper with session credentials.
