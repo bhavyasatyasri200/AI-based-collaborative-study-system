@@ -22,39 +22,62 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// Replace your old redisClient initialization block with this:
-const redisClient = redis.createClient({
-  url: process.env.REDIS_URL
-});
+// ---------------- REDIS + SESSION SETUP ----------------
+let store;
+let redisClient;
 
+const isProduction = process.env.NODE_ENV === 'production';
 
-redisClient.on('error', (err) => {
-  console.error('⚠️ Redis Client Error (Prevented Crash):', err.message || err);
-});
+if (process.env.REDIS_URL) {
+  // Upstash uses rediss:// (TLS) — detect and enable tls explicitly
+  const isTLS = process.env.REDIS_URL.startsWith('rediss://');
+  redisClient = redis.createClient({
+    url: process.env.REDIS_URL,
+    socket: {
+      tls: isTLS,               // required for Upstash rediss:// URLs
+      connectTimeout: 15000,    // 15s — Upstash can have cold-start latency
+      reconnectStrategy: (retries) => {
+        if (retries > 10) {
+          console.error('⚠️ Redis: max reconnect attempts reached. Giving up.');
+          return new Error('Max Redis reconnect attempts reached');
+        }
+        return Math.min(retries * 300, 3000); // backoff: 300ms, 600ms ... up to 3s
+      }
+    }
+  });
 
-redisClient.on('connect', () => {
-  console.log('✅ Redis Client Connected');
-});
+  redisClient.on('error', (err) => {
+    console.error('⚠️ Redis Client Error (Prevented Crash):', err.message || err);
+  });
 
-redisClient.connect().catch(console.error);
+  redisClient.on('connect', () => {
+    console.log('✅ Redis Client Connected');
+  });
 
+  redisClient.connect().catch((err) => {
+    console.error('⚠️ Redis connect() failed:', err.message);
+  });
 
-
-
-const store = new RedisStore({
-  client: redisClient,
-  prefix: "sess:"
-});
+  store = new RedisStore({
+    client: redisClient,
+    prefix: "sess:"
+  });
+  console.log('✅ Using Redis session store');
+} else {
+  console.warn('⚠️ REDIS_URL not set — using in-memory session store (not suitable for production scaling)');
+  store = undefined; // express-session defaults to MemoryStore
+}
 
 // ---------------- SESSION ----------------
 const sessionMiddleware = session({
   store,
-  secret: process.env.SESSION_SECRET||"default_secret",
+  secret: process.env.SESSION_SECRET || "default_secret",
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: false,
+    secure: isProduction,        // true on Render (HTTPS), false locally
+    sameSite: isProduction ? 'none' : 'lax',  // required for cross-site cookies on Render
     maxAge: 1000 * 60 * 60 * 24
   }
 });

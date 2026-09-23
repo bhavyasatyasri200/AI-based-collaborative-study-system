@@ -98,10 +98,16 @@ const pool = require('../config.js');
           req.session.userId = dbUser.id;
           req.session.email = dbUser.email;
           req.session.username = dbUser.name;
-    
-          // Redirect to frontend app after successful Google auth
-          const FRONTEND_URL = process.env.FRONTEND_URL ;
-          res.redirect(`${FRONTEND_URL}/home`);
+
+          // Explicitly save session BEFORE redirect so it's persisted in Redis/store
+          req.session.save((err) => {
+            if (err) {
+              console.error("Session save error:", err);
+              return res.status(500).send("Session could not be saved. Please try again.");
+            }
+            const FRONTEND_URL = process.env.FRONTEND_URL;
+            res.redirect(`${FRONTEND_URL}/home`);
+          });
     } catch (error) {
         console.error("Google Callback Error:", error);
         res.status(500).send("Internal Server Error during Google Authentication");
