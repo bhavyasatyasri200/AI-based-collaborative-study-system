@@ -105,7 +105,7 @@ const pool = require('../config.js');
               console.error("Session save error:", err);
               return res.status(500).send("Session could not be saved. Please try again.");
             }
-            const FRONTEND_URL = process.env.FRONTEND_URL;
+            const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
             res.redirect(`${FRONTEND_URL}/home`);
           });
     } catch (error) {
